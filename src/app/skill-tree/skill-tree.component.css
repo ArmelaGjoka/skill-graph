@@ -1,0 +1,39 @@
+body { 
+  font-family: Roboto, Arial, sans-serif;
+  margin: 0;
+}
+
+.basic-container {
+  padding: 30px;
+}
+
+.version-info {
+  font-size: 8pt;
+  float: right;
+}
+
+
+::ng-deep .mat-horizontal-stepper-header .mat-step-icon {
+    visibility: hidden !important;
+}
+
+button {
+    outline: 0 !important;
+}
+
+.dropdown-menu li a {
+    text-decoration: none;
+    height: 100%;
+    position: relative;
+    outline: 0;
+}
+.mat-form-field
+    {
+        left: 820px;
+        top: 20px;
+    }
+
+.mat-stepper-horizontal    {
+        width: 900px;
+        margin-left: 500px;
+    }

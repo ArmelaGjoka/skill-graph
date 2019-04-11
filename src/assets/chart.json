@@ -1,0 +1,265 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "width": 800,
+  "height": 500,
+  "padding": 10,
+  "data": [
+    {
+      "name": "table",
+      "values": [],
+      "transform": [
+        {
+          "type": "formula",
+          "as": "y1",
+          "expr": "datum.y + 10"
+        },
+        {
+          "type": "formula",
+          "as": "y2",
+          "expr": "datum.y - 10"
+        },
+        {
+          "type": "formula",
+          "as": "color",
+          "expr": "datum.isLocked ? '#b3b3b3' : ' #00e6ac'"
+        },
+        {
+          "type": "formula",
+          "as": "xIcon",
+          "expr": "datum.x + 40"
+        },
+        {
+          "type": "formula",
+          "as": "yIcon",
+          "expr": "datum.y + 5"
+        }
+      ]
+    },
+    {
+      "name": "dependencyData",
+      "source": "table",
+      "transform": [
+        {
+          "type": "flatten",
+          "fields": [
+            "dependencies"
+          ],
+          "as": [
+            "dependency"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "paths",
+      "source": "dependencyData",
+      "transform": [
+        {
+          "type": "project",
+          "fields": [
+            "dependency.level",
+            "dependency.y",
+            "x",
+            "y",
+            "y2",
+            "name"
+          ],
+          "as": [
+            "depX",
+            "depY",
+            "x",
+            "y",
+            "y2",
+            "name"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "srcY",
+          "expr": "(datum.x-datum.depX - 1)* (25)"
+        },
+        {
+          "type": "formula",
+          "as": "trgY",
+          "expr": "(datum.y - datum.depY) * 5"
+        },
+        {
+          "type": "formula",
+          "as": "tpath",
+          "expr": "'M' + -60 + ' ' + datum.srcY + ' ' +'L' + ' ' + (-128) + ' ' + datum.trgY"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "xscale",
+      "type": "band",
+      "domain": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "range": "width",
+      "padding": 0.35
+    },
+    {
+      "name": "yscale",
+      "type": "linear",
+      "domain": {
+        "data": "table",
+        "field": "y"
+      },
+      "domainMax": 100,
+      "round": true,
+      "range": "height"
+    }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {
+        "data": "table"
+      },
+      "encode": {
+        "enter": {
+          "xc": {
+            "scale": "xscale",
+            "field": "x"
+          },
+          "width": {
+            "value": 120
+          },
+          "yc": {
+            "scale": "yscale",
+            "field": "y"
+          },
+          "height": {
+            "value": 50
+          },
+          "fill": {
+            "field": "color"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {
+        "data": "table"
+      },
+      "encode": {
+        "enter": {
+          "fill": {
+            "value": "black"
+          },
+          "x": {
+            "scale": "xscale",
+            "field": "x"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "y"
+          },
+          "text": {
+            "field": "name"
+          },
+          "align": {
+            "value": "center"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "font": {
+            "value": "serif"
+          },
+          "fontSize": {
+            "value": 14
+          },
+          "fontStyle": {
+            "value": "normal"
+          },
+          "fontWeight": {
+            "value": "normal"
+          },
+          "limit": {
+            "value": 150
+          }
+        }
+      }
+    },
+    {
+      "type": "path",
+      "from": {
+        "data": "paths"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "scale": "xscale",
+            "field": "x"
+          },
+          "x2": {
+            "scale": "xscale",
+            "field": "depX"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "y"
+          },
+          "path": {
+            "field": "tpath"
+          },
+          "stroke": {
+            "value": "#4d4d4d"
+          },
+          "color": {
+            "value": "#4d4d4d"
+          },
+          "strokeWidth": {
+            "value": 2
+          },
+          "strokeOpacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "image",
+      "from": {
+        "data": "table"
+      },
+      "encode": {
+        "enter": {
+          "url": {
+            "value": "https://image.flaticon.com/icons/svg/26/26053.svg"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xscale",
+            "field": "x"
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "yIcon"
+          },
+          "opacity": {
+            "value": 1
+          },
+          "width": {
+            "value": 20
+          },
+          "height": {
+            "value": 20
+          },
+          "align": {
+            "value": "right"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<mat-form-field appearance="outline">
+    <mat-label>Select Graph</mat-label>
+    <mat-select [(ngModel)]="selectedGraph" (selectionChange)="graphChanged()">
+        <mat-option *ngFor="let graph of graphs" [value]="graph.value">{{graph.name}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-horizontal-stepper [linear]="true" #stepper>
+    <mat-step completed="true" #step1>
+        <ng-template matStepLabel>Overview</ng-template>
+        <app-skill-chart [spec]="chartConfig" [data]="overviewData"  [unLock] = "unLockNode" (skillSelected)="skillSelected($event)"></app-skill-chart>
+    </mat-step>
+    <mat-step completed="true" #step2> 
+            <ng-template matStepLabel>Detail View</ng-template>
+            <div *ngIf="selectedNode != null">
+                <label>Detail View of {{selectedNode.name}} that {{getNodeDesc(selectedNode.canBeUnlocked())}}</label>
+            </div>
+            <app-skill-chart [type]="'detail'" [spec]="chartConfig" [data]="detailsData" (skillSelected)="skillSelected($event)" 
+            (skillUnlocked) = "skillUnlocked($event)"></app-skill-chart>
+        </mat-step>
+</mat-horizontal-stepper>
